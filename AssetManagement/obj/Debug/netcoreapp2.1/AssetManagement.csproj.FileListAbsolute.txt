@@ -17,3 +17,17 @@ C:\_GITHUB\AssetManagement\AssetManagement\bin\Debug\netcoreapp2.1\Client.Views.
 C:\_GITHUB\AssetManagement\AssetManagement\bin\Debug\netcoreapp2.1\Client.dll
 C:\_GITHUB\AssetManagement\AssetManagement\bin\Debug\netcoreapp2.1\Client.pdb
 C:\_GITHUB\AssetManagement\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.csproj.CopyComplete
+C:\_GITHUB\AssetManagement_New\AssetManagement\bin\Debug\netcoreapp2.1\AssetManagement.deps.json
+C:\_GITHUB\AssetManagement_New\AssetManagement\bin\Debug\netcoreapp2.1\AssetManagement.runtimeconfig.json
+C:\_GITHUB\AssetManagement_New\AssetManagement\bin\Debug\netcoreapp2.1\AssetManagement.runtimeconfig.dev.json
+C:\_GITHUB\AssetManagement_New\AssetManagement\bin\Debug\netcoreapp2.1\AssetManagement.dll
+C:\_GITHUB\AssetManagement_New\AssetManagement\bin\Debug\netcoreapp2.1\AssetManagement.pdb
+C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.csprojAssemblyReference.cache
+C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.csproj.CoreCompileInputs.cache
+C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.RazorAssemblyInfo.cache
+C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.RazorAssemblyInfo.cs
+C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.AssemblyInfoInputs.cache
+C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.AssemblyInfo.cs
+C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.RazorTargetAssemblyInfo.cache
+C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.dll
+C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.pdb

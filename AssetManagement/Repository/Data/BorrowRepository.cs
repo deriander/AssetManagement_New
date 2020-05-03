@@ -23,23 +23,45 @@ namespace AssetManagement.Repository.Data
 
         DynamicParameters parameters = new DynamicParameters();
         IConfiguration _configuration { get; }
+        
 
-        public async Task<IEnumerable<Borrow>> GetApproval1()
+         public async Task<IEnumerable<BorrowVM>> GetBorrowAdmin()
         {
             using (var connection = new SqlConnection(_configuration.GetConnectionString("MyConnection")))
             {
-                var procedureName = "SP_GetApproval1_Borrow";
-                var data = await connection.QueryAsync<Borrow>(procedureName, commandType: CommandType.StoredProcedure);
+                var procedureName = "SP_GetBorrowAdmin_Borrow";
+                var data = await connection.QueryAsync<BorrowVM>(procedureName, commandType: CommandType.StoredProcedure);
                 return data;
             }
         }
 
-        public async Task<IEnumerable<Borrow>> GetApproval2()
+        public async Task<IEnumerable<BorrowVM>> GetBorrowUser(int id)
+        {
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("MyConnection")))
+            {
+                parameters.Add("@id", id);
+                var procedureName = "SP_GetBorrowUser_Borrow";
+                var data = await connection.QueryAsync<BorrowVM>(procedureName, parameters, commandType: CommandType.StoredProcedure);
+                return data;
+            }
+        }
+
+        public async Task<IEnumerable<BorrowVM>> GetApproval1()
+        {
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("MyConnection")))
+            {
+                var procedureName = "SP_GetApproval1_Borrow";
+                var data = await connection.QueryAsync<BorrowVM>(procedureName, commandType: CommandType.StoredProcedure);
+                return data;
+            }
+        }
+
+        public async Task<IEnumerable<BorrowVM>> GetApproval2()
         {
             using (var connection = new SqlConnection(_configuration.GetConnectionString("MyConnection")))
             {
                 var procedureName = "SP_GetApproval2_Borrow";
-                var data = await connection.QueryAsync<Borrow>(procedureName, commandType: CommandType.StoredProcedure);
+                var data = await connection.QueryAsync<BorrowVM>(procedureName, commandType: CommandType.StoredProcedure);
                 return data;
             }
         }

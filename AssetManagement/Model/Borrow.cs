@@ -25,5 +25,10 @@ namespace AssetManagement.Model
         public Item Item { get; set; }
         [ForeignKey("Item")]
         public int Item_Id { get; set; }
+
+        public Borrow()
+        {
+
+        }
     }
 }

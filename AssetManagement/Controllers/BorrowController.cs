@@ -44,7 +44,7 @@ namespace AssetManagement.Controllers
             {
                 User_Id = entity.User_Id,
                 Item_Id = entity.Item_Id,
-                Status_Approval = "-",
+                Status_Approval = "Waiting",
                 Borrow_Date = DateTimeOffset.Now
             };
             await _borrowRepository.Post(borrow);
@@ -52,8 +52,30 @@ namespace AssetManagement.Controllers
 
         }
 
+        [HttpGet("GetBorrowUser/{user_id}")]
+        public async Task<ActionResult<BorrowVM>> GetBorrowUser(int user_id)
+        {
+            var get = await _borrowRepository.GetBorrowUser(user_id);
+            if (get == null)
+            {
+                return NotFound();
+            }
+            return Ok(get);
+        }
+
+        [HttpGet("GetBorrowAdmin")]
+        public async Task<ActionResult<BorrowVM>> GetBorrowAdmin()
+        {
+            var get = await _borrowRepository.GetBorrowAdmin();
+            if (get == null)
+            {
+                return NotFound();
+            }
+            return Ok(get);
+        }
+
         [HttpGet("GetApproval1")]
-        public async Task<ActionResult<Borrow>> GetApproval1()
+        public async Task<ActionResult<BorrowVM>> GetApproval1()
         {
             var get = await _borrowRepository.GetApproval1();
             if (get == null)
@@ -65,7 +87,7 @@ namespace AssetManagement.Controllers
         }
 
         [HttpGet("GetApproval2")]
-        public async Task<ActionResult<Borrow>> GetApproval2()
+        public async Task<ActionResult<BorrowVM>> GetApproval2()
         {
             var get = await _borrowRepository.GetApproval2();
             if (get == null)

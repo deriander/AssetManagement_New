@@ -25,22 +25,37 @@ namespace AssetManagement.Repository.Data
         DynamicParameters parameters = new DynamicParameters();
         IConfiguration _configuration { get; }
 
-        public async Task<IEnumerable<Request>> GetApproval1()
+        public async Task<List<Request>> GetByUserId(int user_id)
+        {
+            return await _myContext.Set<Request>().Where(x => x.User_Id == user_id).ToListAsync();
+        }
+
+        public async Task<IEnumerable<RequestVM>> GetAdmin()
         {
             using (var connection = new SqlConnection(_configuration.GetConnectionString("MyConnection")))
             {
-                var procedureName = "SP_GetApproval1_Request";
-                var data = await connection.QueryAsync<Request>(procedureName, commandType: CommandType.StoredProcedure);
+                var procedureName = "SP_GetAdmin_Request";
+                var data = await connection.QueryAsync<RequestVM>(procedureName, commandType: CommandType.StoredProcedure);
                 return data;
             }
         }
 
-        public async Task<IEnumerable<Request>> GetApproval2()
+        public async Task<IEnumerable<RequestVM>> GetApproval1()
+        {
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("MyConnection")))
+            {
+                var procedureName = "SP_GetApproval1_Request";
+                var data = await connection.QueryAsync<RequestVM>(procedureName, commandType: CommandType.StoredProcedure);
+                return data;
+            }
+        }
+
+        public async Task<IEnumerable<RequestVM>> GetApproval2()
         {
             using (var connection = new SqlConnection(_configuration.GetConnectionString("MyConnection")))
             {
                 var procedureName = "SP_GetApproval2_Request";
-                var data = await connection.QueryAsync<Request>(procedureName, commandType: CommandType.StoredProcedure);
+                var data = await connection.QueryAsync<RequestVM>(procedureName, commandType: CommandType.StoredProcedure);
                 return data;
             }
         }

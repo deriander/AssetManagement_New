@@ -7,10 +7,10 @@
 <div class="container-fluid">
     <div class="row page-titles">
         <div class="col-md-6 col-8 align-self-center">
-            <h3 class="text-themecolor m-b-0 m-t-0">Department Dashboard</h3>
+            <h3 class="text-themecolor m-b-0 m-t-0">Request Dashboard</h3>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-                <li class="breadcrumb-item active">Department Dashboard</li>
+                <li class="breadcrumb-item active">Request Dashboard</li>
             </ol>
         </div>
         <div class="col-md-6 col-4 align-self-center">
@@ -25,14 +25,14 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="card-title">Department</h2>
+                    <h2 class="card-title">Request</h2>
                     <hr />
                     <!-- Trigger the modal with a button -->
-                    @*<button type="button" onclick="ShowModal()" class="btn pull-left hidden-sm-down btn-success m-b-5" data-placement="top"> <i class="mdi mdi-plus-circle"></i> Create</button>*@
+                    <button type="button" onclick="ShowModal()" class="btn pull-left hidden-sm-down btn-success m-b-5" data-placement="top"> <i class="mdi mdi-plus-circle"></i> Request Item</button>
                     <div>
                         @*<button type="button" onclick="location.href='@Url.Action("ExportToPDF", "Department")'" class="btn pull-right hidden-sm-down btn-default m-l-5" data-placement="top"> PDF</button>
-                        <button type="button" onclick="location.href='@Url.Action("ExportToExcel", "Department")'" class="btn pull-right hidden-sm-down btn-default m-l-5" data-placement="top"> Excel</button>
-                        <button type="button" onclick="location.href='@Url.Action("ExportToCSV", "Department")'" class="btn pull-right hidden-sm-down btn-default m-l-5" data-placement="top"> CSV</button>*@
+                            <button type="button" onclick="location.href='@Url.Action("ExportToExcel", "Department")'" class="btn pull-right hidden-sm-down btn-default m-l-5" data-placement="top"> Excel</button>
+                            <button type="button" onclick="location.href='@Url.Action("ExportToCSV", "Department")'" class="btn pull-right hidden-sm-down btn-default m-l-5" data-placement="top"> CSV</button>*@
                     </div>
                     <!-- Modal -->
                     <div id="myModal" class="modal fade" role="dialog">
@@ -41,21 +41,41 @@
                             <div class="modal-content">
                                 <form id="myForm">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Request</h4>
+                                        <h4 class="modal-title">Add Request</h4>
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <input type="hidden" class="form-control" id="Id">
+                                            <label for="Brand">Brand</label>
+                                            <input class="form-control" id="Brand" placeholder="Brand">
                                         </div>
                                         <div class="form-group">
-                                            <label for="Name">Name</label>
-                                            <input class="form-control" id="Name" placeholder="Name">
+                                            <label for="Cpu">CPU</label>
+                                            <input class="form-control" id="Cpu" placeholder="Cpu">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Gpu">GPU</label>
+                                            <input class="form-control" id="Gpu" placeholder="Gpu">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Ram">RAM</label>
+                                            <input class="form-control" id="Ram" placeholder="Ram">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Display">Display</label>
+                                            <input class="form-control" id="Display" placeholder="Display">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Storage">Storage</label>
+                                            <input class="form-control" id="Storage" placeholder="Storage">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Os">Os</label>
+                                            <input class="form-control" id="Os" placeholder="Os">
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        @*<button id="SaveBtn" type="button" onclick="Save()" class="btn btn-success" data-dismiss="modal">Submit</button>
-                                        <button id="UpdateBtn" type="button" onclick="Edit()" class="btn btn-success" data-dismiss="modal">Update</button>*@
+                                        <button id="RequestBtn" type="button" onclick="AddRequest()" class="btn btn-success" data-dismiss="modal">Add Request</button>
                                     </div>
                                 </form>
                             </div>
@@ -151,6 +171,7 @@
 
     <!-- internal script -->
     <script src="~/Scripts/RequestScript.js"></script>
+    <script src="~/Scripts/TableRequestUser.js"></script>
 
     <!-- alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.10.9/dist/sweetalert2.all.min.js"></script>

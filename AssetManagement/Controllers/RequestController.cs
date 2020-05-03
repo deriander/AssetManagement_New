@@ -13,27 +13,84 @@ namespace AssetManagement.Controllers
     [ApiController]
     public class RequestController : BasesController<Request, RequestRepository>
     {
-        private readonly RequestRepository _repository;
+        private readonly RequestRepository _requestRepository;
+        private readonly ItemRepository _itemRepository;
 
-        public RequestController(RequestRepository requestRepository) : base(requestRepository)
+        public RequestController(
+            RequestRepository requestRepository,
+            ItemRepository itemRepository) : base(requestRepository)
         {
-            this._repository = requestRepository;
+            this._requestRepository = requestRepository;
+            this._itemRepository = itemRepository;
         }
 
         [HttpPost("PostRequest")]
         public async Task<ActionResult<Request>> PostRequest(Request entity)
         {
             entity.Request_Date = DateTimeOffset.Now;
-            entity.Status_Approval = "-";
-            await _repository.Post(entity);
+            entity.Status_Approval = "Waiting";
+            await _requestRepository.Post(entity);
             return CreatedAtAction("Get", new { id = entity.Id }, entity);
 
         }
 
-        [HttpGet("GetApproval1")]
-        public async Task<ActionResult<Request>> GetApproval1()
+        [HttpPost("AddRequestItem")]
+        public async Task<ActionResult<Request>> AddRequestItem(Request entity)
         {
-            var get = await _repository.GetApproval1();
+            // update status to added
+            var put = await _requestRepository.Get(entity.Id);
+            put.Status_Approval = "Added";
+            await _requestRepository.Put(put);
+
+            // add item to item table
+            Item item = new Item
+            {
+                Status = true,
+                Create_Date = DateTimeOffset.Now,
+                Is_Delete = false,
+                Brand = entity.Brand,
+                Cpu = entity.Cpu,
+                Gpu = entity.Gpu,
+                Ram = entity.Ram,
+                Display = entity.Display,
+                Storage = entity.Storage,
+                Os = entity.Os
+            };
+            
+            await _itemRepository.Post(item);
+            return CreatedAtAction("Get", new { id = entity.Id }, entity);
+
+        }
+
+        [HttpGet("GetAdmin")]
+        public async Task<ActionResult<RequestVM>> GetAdmin()
+        {
+            var get = await _requestRepository.GetAdmin();
+            if (get == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(get);
+        }
+
+        // get for request view user
+        [HttpGet("GetByUserId/{user_id}")]
+        public async Task<ActionResult<Request>> GetByUserId(int user_id)
+        {
+            var get = await _requestRepository.GetByUserId(user_id);
+            if (get == null)
+            {
+                return NotFound();
+            }
+            return Ok(get);
+            //return get;
+        }
+
+        [HttpGet("GetApproval1")]
+        public async Task<ActionResult<RequestVM>> GetApproval1()
+        {
+            var get = await _requestRepository.GetApproval1();
             if (get == null)
             {
                 return NotFound();
@@ -43,9 +100,9 @@ namespace AssetManagement.Controllers
         }
 
         [HttpGet("GetApproval2")]
-        public async Task<ActionResult<Request>> GetApproval2()
+        public async Task<ActionResult<RequestVM>> GetApproval2()
         {
-            var get = await _repository.GetApproval2();
+            var get = await _requestRepository.GetApproval2();
             if (get == null)
             {
                 return NotFound();
@@ -54,41 +111,18 @@ namespace AssetManagement.Controllers
             return Ok(get);
         }
 
-        //// Update for Admin
-        //[HttpPut("PutRequest/{id}")]
-        //public async Task<ActionResult<Request>> PutRequest(int id, Request entity)
-        //{
-        //    var put = await _repository.Get(id);
-        //    if (put == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    if (entity.Specification != null)
-        //    {
-        //        put.Specification = entity.Specification;
-        //    }
-        //    if (entity.Item_Name != null)
-        //    {
-        //        put.Item_Name = entity.Item_Name;
-        //    }
-
-        //    await _repository.Put(put);
-        //    return Ok("Successfully updated Request data");
-
-        //}
-
         // Accept request App1
         [HttpPut("PutApproval1/{id}")]
         public async Task<ActionResult<Request>> PutApproval1(int id, Request entity)
         {
-            var put = await _repository.Get(id);
+            var put = await _requestRepository.Get(id);
             if (put == null)
             {
                 return NotFound();
             }
             put.Approval_1 = true;
 
-            await _repository.Put(put);
+            await _requestRepository.Put(put);
             return Ok("Successfully updated Request data");
 
         }
@@ -97,7 +131,7 @@ namespace AssetManagement.Controllers
         [HttpPut("PutApproval2/{id}")]
         public async Task<ActionResult<Request>> PutApproval2(int id, Request entity)
         {
-            var put = await _repository.Get(id);
+            var put = await _requestRepository.Get(id);
             if (put == null)
             {
                 return NotFound();
@@ -105,7 +139,7 @@ namespace AssetManagement.Controllers
             put.Approval_2 = true;
             put.Status_Approval = "Approved";
 
-            await _repository.Put(put);
+            await _requestRepository.Put(put);
             return Ok("Successfully updated Request data");
 
         }
@@ -114,14 +148,14 @@ namespace AssetManagement.Controllers
         [HttpPut("DeclineApproval/{id}")]
         public async Task<ActionResult<Request>> DeclineApproval(int id, Request entity)
         {
-            var put = await _repository.Get(id);
+            var put = await _requestRepository.Get(id);
             if (put == null)
             {
                 return NotFound();
             }
             put.Status_Approval = "Declined";
 
-            await _repository.Put(put);
+            await _requestRepository.Put(put);
             return Ok("Successfully updated Request data");
 
         }

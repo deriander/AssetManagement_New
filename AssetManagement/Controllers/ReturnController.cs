@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using AssetManagement.Base;
 using AssetManagement.Model;
 using AssetManagement.Repository.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssetManagement.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class ReturnController : BasesController<Return, ReturnRepository>
@@ -25,11 +27,11 @@ namespace AssetManagement.Controllers
             this._itemRepository = itemRepository;
         }
 
-        [HttpPut("ReturnDone/{id}")]
-        public async Task<ActionResult<Return>> ReturnDone(int id, Return entity)
+        [HttpPut("ReturnDone/{item_id}")]
+        public async Task<ActionResult<Return>> ReturnDone(int item_id, Return entity)
         {
             // update Return data status to 'Done'
-            var putReturn = await _returnRepository.Get(id);
+            var putReturn = await _returnRepository.GetReturnByItemId(item_id);
             if (putReturn == null)
             {
                 return NotFound();
@@ -52,6 +54,30 @@ namespace AssetManagement.Controllers
 
             return Ok("Successfully updated Return data");
 
+        }
+
+        [HttpGet("GetReturnUser/{id}")]
+        public async Task<ActionResult<ReturnVM>> GetReturnUser(int id)
+        {
+            var get = await _returnRepository.GetReturnUser(id);
+            if (get == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(get);
+        }
+
+        [HttpGet("GetReturnAdmin")]
+        public async Task<ActionResult<ReturnVM>> GetReturnAdmin()
+        {
+            var get = await _returnRepository.GetReturnAdmin();
+            if (get == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(get);
         }
     }
 }

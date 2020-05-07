@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using AssetManagement.Base;
 using AssetManagement.Model;
 using AssetManagement.Repository.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssetManagement.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[Controller]")]
     [ApiController]
     public class BorrowController : BasesController<Borrow, BorrowRepository>
@@ -116,7 +118,7 @@ namespace AssetManagement.Controllers
 
         // Accept request App2 and post data to Return table
         [HttpPut("PutApproval2/{id}")]
-        public async Task<ActionResult<Borrow>> PutApproval2(int id, Borrow entity)
+        public async Task<ActionResult<BorrowVM>> PutApproval2(int id, BorrowVM entity)
         {
             // update data status_approval to 'approved'
             var put = await _borrowRepository.Get(id);

@@ -163,7 +163,7 @@ namespace AssetManagement.Migrations
 
                     b.Property<string>("Phone_Number");
 
-                    b.Property<int>("Role_Id");
+                    b.Property<string>("Role");
 
                     b.HasKey("Id");
 

@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using AssetManagement.Base;
 using AssetManagement.Model;
 using AssetManagement.Repository.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssetManagement.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class ItemController : BasesController<Item, ItemRepository>
@@ -36,14 +38,14 @@ namespace AssetManagement.Controllers
         public async Task<ActionResult<Item>> GetItemAdmin()
         {
             var get = await _repository.GetItemAdmin();
-            return Ok(new { data = get });
+            return Ok(get);
         }
 
         [HttpGet("GetItemUser")]
         public async Task<ActionResult<Item>> GetItemUser()
         {
             var get = await _repository.GetItemUser();
-            return Ok(new { data = get });
+            return Ok(get);
         }
 
         [HttpPut("PutItem/{id}")]

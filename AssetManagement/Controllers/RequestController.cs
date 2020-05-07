@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using AssetManagement.Base;
 using AssetManagement.Model;
 using AssetManagement.Repository.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssetManagement.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[Controller]")]
     [ApiController]
     public class RequestController : BasesController<Request, RequestRepository>
@@ -35,7 +37,7 @@ namespace AssetManagement.Controllers
         }
 
         [HttpPost("AddRequestItem")]
-        public async Task<ActionResult<Request>> AddRequestItem(Request entity)
+        public async Task<ActionResult<RequestVM>> AddRequestItem(RequestVM entity)
         {
             // update status to added
             var put = await _requestRepository.Get(entity.Id);
@@ -60,6 +62,18 @@ namespace AssetManagement.Controllers
             await _itemRepository.Post(item);
             return CreatedAtAction("Get", new { id = entity.Id }, entity);
 
+        }
+
+        [HttpGet("GetById/{id}")]
+        public async Task<ActionResult<RequestVM>> GetById(int id)
+        {
+            var get = await _requestRepository.GetById(id);
+            if (get == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(get);
         }
 
         [HttpGet("GetAdmin")]

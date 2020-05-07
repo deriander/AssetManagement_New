@@ -25,22 +25,30 @@ namespace AssetManagement.Repository.Data
         DynamicParameters parameters = new DynamicParameters();
         IConfiguration _configuration { get; }
 
-        public async Task<List<Item>> GetItemAdmin()
+        public async Task<IEnumerable<Item>> GetItemAdmin()
         {
             return await _myContext.Set<Item>().Where(x => x.Is_Delete == false).ToListAsync();
         }
 
-        public async Task<IEnumerable<Request>> GetItemUser()
+        //public async Task<IEnumerable<Item>> GetItemAdmin()
+        //{
+        //    using (var connection = new SqlConnection(_configuration.GetConnectionString("MyConnection")))
+        //    {
+        //        var procedureName = "SP_GetItemAdmin_Item";
+        //        var data = await connection.QueryAsync<Item>(procedureName, commandType: CommandType.StoredProcedure);
+        //        return data;
+        //    }
+        //}
+
+        public async Task<IEnumerable<Item>> GetItemUser()
         {
             using (var connection = new SqlConnection(_configuration.GetConnectionString("MyConnection")))
             {
                 var procedureName = "SP_GetItemUser_Item";
-                var data = await connection.QueryAsync<Request>(procedureName, commandType: CommandType.StoredProcedure);
+                var data = await connection.QueryAsync<Item>(procedureName, commandType: CommandType.StoredProcedure);
                 return data;
             }
         }
-
-
     }
 }
 

@@ -30,6 +30,17 @@ namespace AssetManagement.Repository.Data
             return await _myContext.Set<Request>().Where(x => x.User_Id == user_id).ToListAsync();
         }
 
+        public async Task<IEnumerable<RequestVM>> GetById(int id)
+        {
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("MyConnection")))
+            {
+                parameters.Add("@id", id);
+                var procedureName = "SP_GetById_Request";
+                var data = await connection.QueryAsync<RequestVM>(procedureName, parameters, commandType: CommandType.StoredProcedure);
+                return data;
+            }
+        }
+
         public async Task<IEnumerable<RequestVM>> GetAdmin()
         {
             using (var connection = new SqlConnection(_configuration.GetConnectionString("MyConnection")))

@@ -9,6 +9,7 @@ namespace AssetManagement.Model
     {
         public int Id { get; set; }
         public string Fullname { get; set; }
+        public string Email { get; set; }
         public Boolean Approval_1 { get; set; }
         public Boolean Approval_2 { get; set; }
         public string Status_Approval { get; set; }

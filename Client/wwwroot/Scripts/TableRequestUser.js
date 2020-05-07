@@ -11,10 +11,12 @@
         //    { "orderable": true, "targets": 3 },
         //    { "searchable": true, "targets": 3 }
         //],
+        "order": [[0, "desc"]],
+        "scrollX": true,
         "columns": [
             {
                 "data": "request_Date", "render": function (data) {
-                    return moment(data).format('MMMM Do YYYY, h:mm:ss a');
+                    return moment(data).format('DD/MM/YYYY, hh:mm a');
                 }
             },
             {

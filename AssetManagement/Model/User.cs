@@ -21,6 +21,6 @@ namespace AssetManagement.Model
         public string Phone_Number { get; set; }
         public string Address { get; set; }
         public DateTime Birth_Date { get; set; }
-        public int Role_Id { get; set; }
+        public string Role { get; set; }
     }
 }

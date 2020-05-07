@@ -30,12 +30,14 @@ function AcceptApproval1(id) {
     });
 }
 
-function AcceptApproval2(id) {
+function AcceptApproval2(id, item_id, email) {
     var Model = new Object();
     Model.Id = id;
+    Model.Item_Id = item_id;
+    Model.Email = email;
     $.ajax({
         type: 'PUT',
-        url: '/Borrow/AcceptApproval2/' + id,
+        url: '/Borrow/AcceptApproval2/',
         data: Model
     }).then((result) => {
         if (result.statusCode === 200) {

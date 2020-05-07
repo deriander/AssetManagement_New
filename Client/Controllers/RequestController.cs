@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using AssetManagement.Model;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +15,7 @@ namespace Client.Controllers
 {
     public class RequestController : Controller
     {
-        readonly HttpClient client = new HttpClient
+        private HttpClient client = new HttpClient
         {
             BaseAddress = new Uri("https://localhost:44304/api/")
         };
@@ -21,14 +23,18 @@ namespace Client.Controllers
         // VIEW USER
         public IActionResult Index()
         {
-            return View();
+            var role = HttpContext.Session.GetString("Role");
+            if (role == "User" || role == "App1" || role == "App2")
+            {
+                return View();
+            }
+            return RedirectToAction("AccessDenied", "User");
         }
 
         public JsonResult LoadRequestById()
         {
-            //client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
-            var id = 1; // session user id
-            //List data = null;
+            client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
+            var id = HttpContext.Session.GetString("Id"); // session user id
             List<Request> data = new List<Request>();
             var responseTask = client.GetAsync("Request/GetByUserId/" + id);
             responseTask.Wait();
@@ -36,7 +42,6 @@ namespace Client.Controllers
             if (result.IsSuccessStatusCode)
             {
                 var json = JsonConvert.DeserializeObject(result.Content.ReadAsStringAsync().Result).ToString();
-                //data = JsonConvert.SerializeObject(json);
                 data = JsonConvert.DeserializeObject<List<Request>>(json);
             }
             else
@@ -50,8 +55,9 @@ namespace Client.Controllers
 
         public JsonResult AddRequest(Request model)
         {
-            //client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
-            model.User_Id = 1; // add user_id from session
+            client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
+            var user_id = HttpContext.Session.GetString("Id");
+            model.User_Id = Convert.ToInt32(user_id); // add user_id from session
             var myContent = JsonConvert.SerializeObject(model);
             var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
             var byteContent = new ByteArrayContent(buffer);
@@ -64,12 +70,17 @@ namespace Client.Controllers
         // VIEW ADMIN
         public IActionResult Admin()
         {
-            return View();
+            var role = HttpContext.Session.GetString("Role");
+            if (role == "Admin")
+            {
+                return View();
+            }
+            return RedirectToAction("AccessDenied", "User");
         }
 
         public JsonResult LoadRequest()
         {
-            //client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
+            client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
             List<RequestVM> data = new List<RequestVM>();
             var responseTask = client.GetAsync("Request/GetAdmin");
             responseTask.Wait();
@@ -77,7 +88,6 @@ namespace Client.Controllers
             if (result.IsSuccessStatusCode)
             {
                 var json = JsonConvert.DeserializeObject(result.Content.ReadAsStringAsync().Result).ToString();
-                //data = JsonConvert.SerializeObject(json);
                 data = JsonConvert.DeserializeObject<List<RequestVM>>(json);
             }
             else
@@ -91,16 +101,16 @@ namespace Client.Controllers
 
         public JsonResult GetById(int id)
         {
-            //client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
-            Request data = null;
-            var responseTask = client.GetAsync("Request/" + id);
+            client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
+            List<RequestVM> data = new List<RequestVM>();
+            var responseTask = client.GetAsync("Request/GetById/" + id);
             responseTask.Wait();
             var result = responseTask.Result;
             if (result.IsSuccessStatusCode)
             {
                 var json = JsonConvert.DeserializeObject(result.Content.ReadAsStringAsync().Result).ToString();
                 //data = JsonConvert.SerializeObject(json);
-                data = JsonConvert.DeserializeObject<Request>(json);
+                data = JsonConvert.DeserializeObject<List<RequestVM>>(json);
             }
             else
             {
@@ -111,35 +121,80 @@ namespace Client.Controllers
 
         }
 
-        public JsonResult AddItemRequest(Request model)
+        public JsonResult AddItemRequest(RequestVM model)
         {
-            //client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
+            client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
             var myContent = JsonConvert.SerializeObject(model);
             var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
             var byteContent = new ByteArrayContent(buffer);
             byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             var result = client.PostAsync("Request/AddRequestItem", byteContent).Result;
+            if (result.IsSuccessStatusCode)
+            {
+                SendEmail(model);
+            }
             return Json(result);
 
         }
 
+        public void SendEmail(RequestVM model)
+        {
+            // Credentials
+            var credentials = new NetworkCredential("yrsproject15@gmail.com", "yarsiproject2015");
+
+            // Mail message
+            var mail = new MailMessage()
+            {
+                From = new MailAddress("yrsproject15@gmail.com"), // email from
+                Subject = "Asset Management MII " + DateTimeOffset.Now,
+                Body = string.Format("Dear {0},<br /><br />your item request has been added.<br /><br />Thank You.", model.Fullname)
+            };
+            mail.IsBodyHtml = true;
+            mail.To.Add(new MailAddress(model.Email));
+
+            // Smtp client
+            var client = new SmtpClient()
+            {
+                Port = 587,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Host = "smtp.gmail.com",
+                EnableSsl = true,
+                Credentials = credentials
+            };
+            try
+            {
+                client.Send(mail);
+            }
+            catch
+            {
+
+            }
+        }
+
+
         // VIEW APP1
         public IActionResult App1()
         {
-            return View();
+            var role = HttpContext.Session.GetString("Role");
+            if (role == "App1")
+            {
+                return View();
+            }
+            return RedirectToAction("AccessDenied", "User");
+
         }
 
         public JsonResult LoadRequestApp1()
         {
-            //client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
+            client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
             List<RequestVM> data = new List<RequestVM>();
             var responseTask = client.GetAsync("Request/GetApproval1");
             responseTask.Wait();
             var result = responseTask.Result;
             if (result.IsSuccessStatusCode)
             {
-                var json = JsonConvert.DeserializeObject(result.Content.ReadAsStringAsync().Result).ToString();
-                //data = JsonConvert.SerializeObject(json);
+                var json = JsonConvert.DeserializeObject(result.Content.ReadAsStringAsync().Result).ToString();               
                 data = JsonConvert.DeserializeObject<List<RequestVM>>(json);
             }
             else
@@ -153,7 +208,7 @@ namespace Client.Controllers
 
         public JsonResult AcceptApproval1(Request model, int id)
         {
-            //client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
+            client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
             var myContent = JsonConvert.SerializeObject(model);
             var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
             var byteContent = new ByteArrayContent(buffer);
@@ -166,20 +221,25 @@ namespace Client.Controllers
         // VIEW APP2
         public IActionResult App2()
         {
-            return View();
+            var role = HttpContext.Session.GetString("Role");
+            if (role == "App2")
+            {
+                return View();
+            }
+            return RedirectToAction("AccessDenied", "User");
+
         }
 
         public JsonResult LoadRequestApp2()
         {
-            //client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
+            client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
             List<RequestVM> data = new List<RequestVM>();
             var responseTask = client.GetAsync("Request/GetApproval2");
             responseTask.Wait();
             var result = responseTask.Result;
             if (result.IsSuccessStatusCode)
             {
-                var json = JsonConvert.DeserializeObject(result.Content.ReadAsStringAsync().Result).ToString();
-                //data = JsonConvert.SerializeObject(json);
+                var json = JsonConvert.DeserializeObject(result.Content.ReadAsStringAsync().Result).ToString();;
                 data = JsonConvert.DeserializeObject<List<RequestVM>>(json);
             }
             else
@@ -193,7 +253,7 @@ namespace Client.Controllers
 
         public JsonResult AcceptApproval2(Request model, int id)
         {
-            //client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
+            client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
             var myContent = JsonConvert.SerializeObject(model);
             var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
             var byteContent = new ByteArrayContent(buffer);
@@ -206,7 +266,7 @@ namespace Client.Controllers
         // DECLINE APPROVAL
         public JsonResult DeclineApproval(Request model, int id)
         {
-            //client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
+            client.DefaultRequestHeaders.Add("Authorization", HttpContext.Session.GetString("JWTToken"));
             var myContent = JsonConvert.SerializeObject(model);
             var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
             var byteContent = new ByteArrayContent(buffer);

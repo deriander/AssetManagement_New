@@ -9,6 +9,7 @@ namespace AssetManagement.Model
     {
         // table user
         public string Fullname { get; set; }
+        public string Email { get; set; }
 
         // table borrow
         public int Id { get; set; }

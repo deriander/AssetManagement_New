@@ -11,11 +11,12 @@
         //    { "orderable": true, "targets": 3 },
         //    { "searchable": true, "targets": 3 }
         //],
+        "scrollX": true,
         "columns": [
             { "data": "fullname" },
             {
                 "data": "borrow_Date", "render": function (data) {
-                    return moment(data).format('MMMM Do YYYY, h:mm:ss a');
+                    return moment(data).format('DD/MM/YYYY, hh:mm a');
                 }
             },
             {

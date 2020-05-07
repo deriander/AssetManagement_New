@@ -22,7 +22,6 @@ C:\_GITHUB\AssetManagement_New\AssetManagement\bin\Debug\netcoreapp2.1\AssetMana
 C:\_GITHUB\AssetManagement_New\AssetManagement\bin\Debug\netcoreapp2.1\AssetManagement.runtimeconfig.dev.json
 C:\_GITHUB\AssetManagement_New\AssetManagement\bin\Debug\netcoreapp2.1\AssetManagement.dll
 C:\_GITHUB\AssetManagement_New\AssetManagement\bin\Debug\netcoreapp2.1\AssetManagement.pdb
-C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.csprojAssemblyReference.cache
 C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.csproj.CoreCompileInputs.cache
 C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.RazorAssemblyInfo.cache
 C:\_GITHUB\AssetManagement_New\AssetManagement\obj\Debug\netcoreapp2.1\AssetManagement.RazorAssemblyInfo.cs

@@ -97,14 +97,16 @@ function GetById(id) {
         dataType: "json",
         async: false,
         success: function (obj) {
-            $('#Id').val(obj.id);
-            $('#Brand').val(obj.brand);
-            $('#Cpu').val(obj.cpu);
-            $('#Gpu').val(obj.gpu);
-            $('#Ram').val(obj.ram);
-            $('#Display').val(obj.display);
-            $('#Storage').val(obj.storage);
-            $('#Os').val(obj.os);
+            $('#Id').val(obj[0].id);
+            $('#Brand').val(obj[0].brand);
+            $('#Cpu').val(obj[0].cpu);
+            $('#Gpu').val(obj[0].gpu);
+            $('#Ram').val(obj[0].ram);
+            $('#Display').val(obj[0].display);
+            $('#Storage').val(obj[0].storage);
+            $('#Os').val(obj[0].os);
+            $('#Email').val(obj[0].email);
+            $('#Fullname').val(obj[0].fullname);
             $('#myModal').modal('show');
         },
         error: function (errormessage) {
@@ -123,6 +125,8 @@ function AddItemRequest() {
     Req.Display = $('#Display').val();
     Req.Storage = $('#Storage').val();
     Req.Os = $('#Os').val();
+    Req.Email = $('#Email').val();
+    Req.Fullname = $('#Fullname').val();
     $.ajax({
         type: 'POST',
         url: '/Request/AddItemRequest/',
